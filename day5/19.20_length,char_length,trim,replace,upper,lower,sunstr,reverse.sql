@@ -1,7 +1,7 @@
 #文字列関数
 
 # length,char_length
-select length("abc");#length はバイト数　日本語は一文字３バイト
+select length("abc");#length はバイト数　全角は3バイト半角は1バイト日本語はすべて全角なので１文字３バイト
 select length("あいう");
 
 select name,length(name) from users;
