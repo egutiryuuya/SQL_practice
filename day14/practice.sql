@@ -201,14 +201,46 @@ group by concat(customers.last_name,customers.first_name);
 employeesテーブルとsalariesテーブルを紐づけます。
 
 EXISTSとINとINNER JOIN、それぞれの方法で記載してください
+select * from employees
+  where id in(select employee_id from salaries where payment > 9000000);
 
+select distinct emp.* from employees as emp
+inner join salaries as sa
+on emp.id = sa.employee_id
+where sa.payment > 9000000;
 
-
+select * from employees as emp
+where 
+  exists(
+    select 
+      1
+    from
+     salaries as sa
+    where emp.id = sa.employee_id and sa.payment > 9000000
+  );
 
 
 8. employeesテーブルから、salariesテーブルと紐づけのできないレコードを取り出してください。
 
 EXISTSとINとLEFT JOIN、それぞれの方法で記載してください
+
+select * from employees where id not in(select employee_id from salaries);
+
+select * from employees  as emp
+left join salaries as sa
+on emp.id = sa.employee_id
+where sa.id is null;
+
+select * from employees
+where 
+not exists(
+ select
+   1
+ from 
+  salaries as sa
+ where sa.employee_id = emp.id
+ );
+
 
 
 
@@ -224,14 +256,19 @@ employeesテーブルのageが、最小age未満のものは最小未満、最�
 
 WITH句を用いて記述します
 
+with customers_age as(
+ select max(age) as max_age,min(age) as min_age,avg(age)as avg_age
+ from customers)
+ select * ,
+ case
+	 when emp.age < ca.min_age then "a"
+	 when emp.age < ca.avg_age then "b"
+	 when emp.age <ca.max_age then "c"
+	 else "ather"
+	 from employees as emp
+ cross join customers_age as ca;
 
 
 
 
-10. customersテーブルからageが50よりも大きいレコードを取り出して、ordersテーブルと連結します。
 
-customersテーブルのidに対して、ordersテーブルのorder_amount*order_priceのorder_date毎の合計値。
-
-合計値の7日間平均値、合計値の15日平均値、合計値の30日平均値を計算します。
-
-7日間平均、15日平均値、30日平均値が計算できない区間(対象よりも前の日付のデータが十分にない区間)は、空白を表示してください。
