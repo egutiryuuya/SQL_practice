@@ -5,7 +5,7 @@ create table animals(
  name varchar(50) not null COMMENT '動物の名前です'
 );
 
-#commentの確認
+#commentの確認.
 show full columns from animals;
 
 insert into animals values(null,"Dog");
